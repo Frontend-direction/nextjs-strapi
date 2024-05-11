@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Heading from "../components/Heading";
 
 interface LayoutProps {
   children: ReactNode;
@@ -7,7 +8,7 @@ interface LayoutProps {
 export default function HomePage() {
   return (
     <>
-      <h1>Indie Gamer</h1>
+      <Heading>Indie Gamer</Heading>
       <p>Only the best indie games, reviewed for you.</p>
     </>
   );
