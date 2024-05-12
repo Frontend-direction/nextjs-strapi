@@ -1,5 +1,6 @@
 import NavBar from "@/components/NavBar";
 import "./globals.css";
+import { exo2, orbitron } from "./font";
 
 export const metadata = {
   title: "Next.js",
@@ -12,7 +13,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${exo2.variable} ${orbitron.variable}`}>
       <body className="bg-orange-50  px-4 py-2 flex flex-col min-h-screen">
         <header>
           <NavBar />
