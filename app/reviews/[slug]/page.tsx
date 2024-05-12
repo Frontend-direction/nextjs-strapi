@@ -1,5 +1,6 @@
 import { getReview, getSlugs } from "@/lib/reviews";
 import Heading from "../../../components/Heading";
+import { Metadata } from "next";
 
 interface ReviewPageParams {
   slug: string;
@@ -7,6 +8,15 @@ interface ReviewPageParams {
 
 interface ReviewPageProps {
   params: ReviewPageParams;
+}
+
+export async function generateMetadata({
+  params: { slug },
+}: ReviewPageProps): Promise<Metadata> {
+  const review = await getReview(slug);
+  return {
+    title: review.title,
+  };
 }
 
 export async function generateStaticParams(): Promise<ReviewPageParams[]> {
