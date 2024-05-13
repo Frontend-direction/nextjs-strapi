@@ -1,6 +1,7 @@
 import { getReview, getSlugs } from "@/lib/reviews";
 import Heading from "../../../components/Heading";
 import { Metadata } from "next";
+import ShareLinkButton from "@/components/ShareLinkButton";
 
 interface ReviewPageParams {
   slug: string;
@@ -32,7 +33,10 @@ export default async function StardewValleyPage({
   return (
     <>
       <Heading>{review.title}</Heading>
-      <p className="italic pb-2">{review.date}</p>
+      <div className="flex gap-3 items-baseline">
+        <p className="italic pb-2">{review.date}</p>
+        <ShareLinkButton />
+      </div>
       <img
         src={review.image}
         alt=""
