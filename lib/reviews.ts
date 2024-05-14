@@ -14,16 +14,11 @@ export interface Review {
   title: string;
   date: string;
   image: string;
+  subtitle: string;
 }
 
 export interface FullReview extends Review {
   body: string | Promise<string>;
-}
-
-export async function getFeaturedReview(): Promise<Review> {
-  const [firstReview] = await getReviews();
-
-  return firstReview;
 }
 
 export async function getReview(slug: string): Promise<FullReview> {
@@ -40,12 +35,12 @@ export async function getReview(slug: string): Promise<FullReview> {
   };
 }
 
-export async function getReviews(): Promise<Review[]> {
+export async function getReviews(pageSize: number): Promise<Review[]> {
   const { data } = await fetchReviews({
     fields: ["slug", "title", "subtitle", "publishedAt"],
     populate: { image: { fields: ["url"] } },
     sort: ["publishedAt:desc"],
-    pagination: { pageSize: 6 },
+    pagination: { pageSize },
   });
 
   return data.map(toReview);
@@ -82,6 +77,7 @@ function toReview(item: CmsItem): Review {
   return {
     slug: attributes.slug,
     title: attributes.title,
+    subtitle: attributes.subtitle,
     date: attributes.publishedAt.slice(0, "yyyy-mm-dd".length),
     image: CMS_URL + attributes.image.data.attributes.url,
   };
