@@ -28,6 +28,11 @@ export async function getReview(slug: string): Promise<FullReview> {
     populate: { image: { fields: ["url"] } },
     pagination: { pageSize: 1, withCount: false },
   });
+
+  if (data.length === 0) {
+    return null;
+  }
+
   const { attributes } = data[0];
   return {
     ...toReview(data[0]),
@@ -51,7 +56,11 @@ async function fetchReviews(parameters: any) {
     `${CMS_URL}/api/reviews?` +
     qs.stringify(parameters, { encodeValuesOnly: true });
   console.log("[fetchReviews]:", url);
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    next: {
+      revalidate: 30, // seconds
+    },
+  });
   if (!response.ok) {
     throw new Error(`CMS returned ${response.status} for ${url}`);
   }

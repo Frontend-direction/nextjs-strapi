@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 import { getReview, getSlugs } from "@/lib/reviews";
 import Heading from "../../../components/Heading";
 import ShareLinkButton from "@/components/ShareLinkButton";
@@ -16,6 +17,11 @@ export async function generateMetadata({
   params: { slug },
 }: ReviewPageProps): Promise<Metadata> {
   const review = await getReview(slug);
+
+  if (!review) {
+    notFound();
+  }
+
   return {
     title: review.title,
   };
@@ -30,6 +36,10 @@ export default async function StardewValleyPage({
   params: { slug },
 }: ReviewPageProps) {
   const review = await getReview(slug);
+
+  if (!review) {
+    notFound();
+  }
 
   return (
     <>
