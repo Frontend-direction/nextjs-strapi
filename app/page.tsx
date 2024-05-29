@@ -9,7 +9,7 @@ interface LayoutProps {
 }
 
 export default async function HomePage() {
-  const reviews = await getReviews(3);
+  const { reviews } = await getReviews(3);
 
   return (
     <>
