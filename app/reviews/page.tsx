@@ -1,8 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
-import { getReviews } from "@/lib/reviews";
+import { getReviews, getSearchableReviews } from "@/lib/reviews";
 import Heading from "../../components/Heading";
 import PaginationBar from "@/components/PaginationBar";
+import SearchBox from "@/components/SearchBox";
 
 interface ReviewsPageProps {
   searchParams: { page?: string };
@@ -17,7 +18,10 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
   return (
     <>
       <Heading>Reviews</Heading>
-      <PaginationBar href="/reviews" page={page} pageCount={pageCount} />
+      <div className="flex justify-between pb-3">
+        <PaginationBar href="/reviews" page={page} pageCount={pageCount} />
+        <SearchBox />
+      </div>
       <ul className="flex flex-row flex-wrap gap-3">
         {reviews.map((review, index) => (
           <li

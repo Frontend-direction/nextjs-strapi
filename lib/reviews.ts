@@ -1,3 +1,5 @@
+import "server-only";
+
 import { readdir } from "node:fs/promises";
 import { marked } from "marked";
 import qs from "qs";
@@ -14,19 +16,21 @@ interface CmsItem {
 export interface Review {
   slug: string;
   title: string;
+  subtitle: string;
   date: string;
   image: string;
-  subtitle: string;
 }
 
 export interface FullReview extends Review {
-  body: string | Promise<string>;
+  body: string;
 }
 
 export interface PaginatedReviews {
   pageCount: number;
   reviews: Review[];
 }
+
+export type SearchableReview = Pick<Review, "slug" | "title">;
 
 export async function getReview(slug: string): Promise<FullReview> {
   const { data } = await fetchReviews({
@@ -62,6 +66,21 @@ export async function getReviews(
     pageCount: meta.pagination.pageCount,
     reviews: data.map(toReview),
   };
+}
+
+export async function searchReviews(
+  query: string
+): Promise<SearchableReview[]> {
+  const { data } = await fetchReviews({
+    filters: { title: { $containsi: query } },
+    fields: ["slug", "title"],
+    sort: ["title"],
+    pagination: { pageSize: 5 },
+  });
+  return data.map(({ attributes }) => ({
+    slug: attributes.slug,
+    title: attributes.title,
+  }));
 }
 
 async function fetchReviews(parameters: any) {
