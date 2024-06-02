@@ -3,3 +3,5 @@ node_modules
 /scripts/strapi-response.json
 
 .env.*local
+
+/prisma/*.db
