@@ -70,7 +70,7 @@ export default async function StardewValleyPage({
           <ChatBubbleBottomCenterTextIcon className="h-6 w-6" />
           Comments
         </h2>
-        <CommentForm title={review.title} />
+        <CommentForm slug={slug} title={review.title} />
         <CommentList slug={slug} />
       </section>
     </>

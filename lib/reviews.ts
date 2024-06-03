@@ -22,7 +22,7 @@ export interface Review {
 }
 
 export interface FullReview extends Review {
-  body: string;
+  body: string | Promise<string>;
 }
 
 export interface PaginatedReviews {
