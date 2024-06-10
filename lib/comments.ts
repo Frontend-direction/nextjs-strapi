@@ -14,6 +14,7 @@ export async function createComment({
 }
 
 export async function getComments(slug: string) {
+  await new Promise((resolve) => setTimeout(resolve, 3000)); // test loading
   return await db.comment.findMany({
     where: { slug },
   });

@@ -7,6 +7,8 @@ import ShareLinkButton from "@/components/ShareLinkButton";
 import { ChatBubbleBottomCenterTextIcon } from "@heroicons/react/24/outline";
 import CommentList from "@/components/CommentList";
 import CommentForm from "@/components/CommentForm";
+import { Suspense } from "react";
+import CommentListSkeleton from "@/components/CommentListSkeleton";
 
 interface ReviewPageParams {
   slug: string;
@@ -71,7 +73,9 @@ export default async function StardewValleyPage({
           Comments
         </h2>
         <CommentForm slug={slug} title={review.title} />
-        <CommentList slug={slug} />
+        <Suspense fallback={<CommentListSkeleton />}>
+          <CommentList slug={slug} />
+        </Suspense>
       </section>
     </>
   );
