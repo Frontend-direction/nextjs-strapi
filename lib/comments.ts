@@ -5,11 +5,11 @@ export type CreateCommentData = Omit<Comment, "id" | "postedAt">;
 
 export async function createComment({
   slug,
-  user,
+  userId,
   message,
 }: CreateCommentData) {
   return await db.comment.create({
-    data: { slug, user, message },
+    data: { slug, userId, message },
   });
 }
 
@@ -17,5 +17,10 @@ export async function getComments(slug: string) {
   await new Promise((resolve) => setTimeout(resolve, 3000)); // test loading
   return await db.comment.findMany({
     where: { slug },
+    include: {
+      user: {
+        select: { name: true },
+      },
+    },
   });
 }

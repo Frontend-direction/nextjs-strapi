@@ -1,6 +1,6 @@
 import type { FormEvent } from "react";
-import type { ActionError, ActionFunction } from "./actions";
 import { useEffect, useState } from "react";
+import type { ActionError, ActionFunction } from "./actions";
 
 export interface SubmissionState {
   loading: boolean;
@@ -17,9 +17,8 @@ export function useFormState(action: ActionFunction): UseFormStateResult {
     loading: false,
     error: null,
   });
-
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    // event.preventDefault();
     setState({ loading: true, error: null });
     const form = event.currentTarget;
     const formData = new FormData(form);
@@ -31,7 +30,6 @@ export function useFormState(action: ActionFunction): UseFormStateResult {
       setState({ loading: false, error: null });
     }
   };
-
   return [state, handleSubmit];
 }
 

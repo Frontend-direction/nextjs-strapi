@@ -1,25 +1,29 @@
 "use server";
 
+import type { ActionError } from "@/lib/actions";
 import type { CreateCommentData } from "@/lib/comments";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { getUserFromSession } from "@/lib/auth";
 import { createComment } from "@/lib/comments";
-import { ActionError } from "@/lib/actions";
 
 export async function createCommentAction(
   formData: FormData
 ): Promise<undefined | ActionError> {
+  const user = await getUserFromSession();
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
   const data: CreateCommentData = {
     slug: formData.get("slug") as string,
-    user: formData.get("user") as string,
+    userId: user.id,
     message: formData.get("message") as string,
   };
-
+  console.log("data", formData);
   const error = validate(data);
   if (error) {
-    return { isError: false, message: error } as ActionError;
+    return { isError: true, message: error };
   }
-
   const comment = await createComment(data);
   console.log("created:", comment);
   revalidatePath(`/reviews/${data.slug}`);
@@ -27,12 +31,6 @@ export async function createCommentAction(
 }
 
 function validate(data: CreateCommentData): string | undefined {
-  if (!data.user) {
-    return "Name field is required";
-  }
-  if (data.user.length > 50) {
-    return "Name field cannot be longer than 50 characters";
-  }
   if (!data.message) {
     return "Comment field is required";
   }

@@ -9,6 +9,8 @@ import CommentList from "@/components/CommentList";
 import CommentForm from "@/components/CommentForm";
 import { Suspense } from "react";
 import CommentListSkeleton from "@/components/CommentListSkeleton";
+import { getUserFromSession } from "@/lib/auth";
+import Link from "next/link";
 
 interface ReviewPageParams {
   slug: string;
@@ -41,6 +43,7 @@ export default async function StardewValleyPage({
   params: { slug },
 }: ReviewPageProps) {
   const review = await getReview(slug);
+  const user = await getUserFromSession();
 
   if (!review) {
     notFound();
@@ -72,7 +75,16 @@ export default async function StardewValleyPage({
           <ChatBubbleBottomCenterTextIcon className="h-6 w-6" />
           Comments
         </h2>
-        <CommentForm slug={slug} title={review.title} />
+        {user ? (
+          <CommentForm slug={slug} title={review.title} userName={user.name} />
+        ) : (
+          <div className="border bg-white mt-3 px-3 py-3 rounded">
+            <Link href="/sign-in" className="text-orange-800 hover:underline">
+              Sign in
+            </Link>{" "}
+            to have your say!
+          </div>
+        )}
         <Suspense fallback={<CommentListSkeleton />}>
           <CommentList slug={slug} />
         </Suspense>

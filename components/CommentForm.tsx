@@ -1,24 +1,24 @@
 "use client";
 
 import { createCommentAction } from "@/app/reviews/[slug]/actions";
-import type { ActionError } from "@/app/reviews/[slug]/actions";
 import { useFormState } from "@/lib/hook";
+
 export interface CommentFormProps {
   slug: string;
   title: string;
+  userName: string;
 }
 
-interface SubmissionState {
-  loading: boolean;
-  error: ActionError | null;
-}
-
-export default function CommentForm({ slug, title }: CommentFormProps) {
+export default function CommentForm({
+  slug,
+  title,
+  userName,
+}: CommentFormProps) {
   const [state, handleSubmit] = useFormState(createCommentAction);
 
   return (
     <form
-      action={handleSubmit as any}
+      onSubmit={handleSubmit}
       className="border bg-white flex flex-col gap-2 mt-3 px-3 py-3 rounded"
     >
       <p className="pb-1">
@@ -26,16 +26,8 @@ export default function CommentForm({ slug, title }: CommentFormProps) {
       </p>
       <input type="hidden" name="slug" value={slug} />
       <div className="flex">
-        <label htmlFor="userField" className="shrink-0 w-32">
-          Your name
-        </label>
-        <input
-          id="userField"
-          name="user"
-          className="border px-2 py-1 rounded w-48"
-          required
-          maxLength={50}
-        />
+        <label className="shrink-0 w-32">Your name</label>
+        <span>{userName}</span>
       </div>
       <div className="flex">
         <label htmlFor="messageField" className="shrink-0 w-32">
@@ -45,8 +37,6 @@ export default function CommentForm({ slug, title }: CommentFormProps) {
           id="messageField"
           name="message"
           className="border px-2 py-1 rounded w-full"
-          required
-          maxLength={500}
         />
       </div>
       {Boolean(state.error) && (
@@ -54,8 +44,10 @@ export default function CommentForm({ slug, title }: CommentFormProps) {
       )}
       <button
         type="submit"
+        disabled={state.loading}
         className="bg-orange-800 rounded px-2 py-1 self-center
-                   text-slate-50 w-32 hover:bg-orange-700"
+                   text-slate-50 w-32 hover:bg-orange-700
+                   disabled:bg-slate-500 disabled:cursor-not-allowed"
       >
         Submit
       </button>
