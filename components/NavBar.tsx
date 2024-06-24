@@ -1,6 +1,9 @@
 import NavLink from "./NavLink";
+import { getUserFromSession } from "@/lib/auth";
+import SignOutButton from "./SignOutButton";
 
-export default function NavBar() {
+export default async function NavBar() {
+  const user = await getUserFromSession();
   return (
     <nav>
       <ul className="flex gap-2">
@@ -15,6 +18,13 @@ export default function NavBar() {
             About
           </NavLink>
         </li>
+        {user ? (
+          <SignOutButton />
+        ) : (
+          <li>
+            <NavLink href="/sign-in">Sign in</NavLink>
+          </li>
+        )}
       </ul>
     </nav>
   );
